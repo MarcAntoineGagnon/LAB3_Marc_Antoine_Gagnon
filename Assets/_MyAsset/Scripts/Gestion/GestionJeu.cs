@@ -6,14 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class GestionJeu : MonoBehaviour
 {
+    FinNiveau _finNiveau;
+    GestionFin _gestionFin;
+
     private int _pointage;          // Nombres d'obstacles touchés au total
     public int _pointageNiv1;       // Nombre d'obstacles touchés au niveau 1
     public int _pointageNiv2;       // Nombre d'obstacles touchés au niveau 2
     public int _pointageNiv3;       // Nombre d'obstacles touchés au niveau 3
+    public int _pointageFinal;
+    public float _tempsDepart;      // Temps au depart du jeu
     public float _tempsNiv1;        // Temps du niveau 1 
     public float _tempsNiv2;        // Temps du niveau 2 
     public float _tempsNiv3;        // Temps du niveau 3 
-    private bool _endGame = false;  // Détermine si le jeu est terminer
+    public float _tempsFinal;      // Temps a la fin du jeu
+    public float _tempsPointage;
+
+    bool _depart; // Verification si le joueur a bouger
 
     // Détection si il existe déjà un gameObject GestionJeu (si oui on efface le nouveau pour conserver le temps)
     private void Awake()
@@ -30,35 +38,25 @@ public class GestionJeu : MonoBehaviour
     }
     void Start()
     {
-        InstructionDepart();
         _pointage = 0;
+        _tempsDepart = Time.time;
     }
 
     // Permettre de quitter le jeu en appuyant sur echap lorsque la partie est terminer
     void Update()
     {
-        if (_endGame)
+        if (SceneManager.GetActiveScene().buildIndex == 4 || SceneManager.GetActiveScene().buildIndex == 0) // si la premiere ou derniere scene effacer gestionJeu (reset score)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                Application.Quit();
-            }
+            Destroy(gameObject);
         }
-    }
-    // Instruction du jeu
-    private void InstructionDepart()
-    {
-        Debug.Log("*** Course à obstacle ***");
-        Debug.Log("Le but du jeu est d'atteindre la zone d'arrivée le plus rapidement possible.");
-        Debug.Log("Chaque obstacle qui sera touché donnera une pénalité de 1 seconde au joueur");
-        Debug.Log("Bonne chance !");
     }
 
     // Méthode d'augmentation du pointage
     public void AugmenterPointage()
     {
         _pointage++;
-        Debug.Log("Nombre d'accrochage : " + _pointage);
+        GestionUI gestionUI = FindObjectOfType<GestionUI>();
+        gestionUI.AugmentePointage(_pointage);
     }
     // Méthode pour connaitre le pointage total
     public int GetPointage()
@@ -66,22 +64,25 @@ public class GestionJeu : MonoBehaviour
         return _pointage;
     }
 
+    // Méthode pour connaitre le pointage total
+    public float GetTempsDepart()
+    {
+        return _tempsDepart;
+    }
+
     // Methode enregistrer temps de chaque niveau
     public void SetTempsNiv(int noScene)
     {
         if(noScene == 0)
         {
-            Debug.Log("Fin Niveau 1");
             _tempsNiv1 = Time.time;
         }
         else if (noScene == 1)
         {
-            Debug.Log("Fin Niveau 2");
             _tempsNiv2 = Time.time - _tempsNiv1;
         }
         else if (noScene == 2)
         {
-            Debug.Log("Fin Niveau 3");
             _tempsNiv3 = Time.time - _tempsNiv1 - _tempsNiv2;
         }
     }
@@ -156,9 +157,31 @@ public class GestionJeu : MonoBehaviour
         return temps;
     }
 
-    // Méthode pour finir la partie
-    public void EndGame()
+    // set du temps final (temps final - temps depart)
+    public void SetTempsFinal(float tempsFinal)
     {
-        _endGame = true;
+        _tempsFinal = tempsFinal - _tempsDepart;
+    }
+
+    // Retourner temps final
+    public float GetTempsFinal()
+    {
+        return _tempsFinal;
+    }
+
+    // Retourner le temps final + pointage
+    public float GetTempsPointage()
+    {
+        return _tempsFinal + GetPointage();
+    }
+
+    public void Fin()
+    {
+        if(SceneManager.GetActiveScene().buildIndex == 4)
+        {
+            SetTempsFinal(_finNiveau.Temps_final());
+            _pointageFinal = GetPointage();
+            _tempsPointage = GetTempsFinal() + _pointageFinal;
+        }
     }
 }

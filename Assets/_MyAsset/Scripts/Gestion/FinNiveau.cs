@@ -24,26 +24,11 @@ public class FinNiveau : MonoBehaviour
             _gestionJeu.SetTempsNiv(noScene); // Enregistrement du temps du niveau
             _gestionJeu.SetPointageNiv(noScene); // Enregistrement du pointage du niveau
 
-            if (noScene == 2) // Vérification si c'est la dernière scène du jeu
+            if (noScene == 3) // Vérification si c'est la dernière scène du jeu
             {
                 _player.FinPartie();
-                Debug.Log("Partie Terminer !! \n");
-
-                Debug.Log("Temps niveau 1 sans pointage : " + _gestionJeu.GetTempsNiv1());
-                Debug.Log("Nombre de collisions Niveau 1 : " + _gestionJeu.GetPointageNiv1());
-                Debug.Log("Temps avec collisions Niveau 1 : " + _gestionJeu.GetTempsFinalNiv1() + "\n");
-
-                Debug.Log("Temps niveau 2 sans pointage : " + _gestionJeu.GetTempsNiv2());
-                Debug.Log("Nombre de collisions Niveau 2 : " + _gestionJeu.GetPointageNiv2());
-                Debug.Log("Temps avec collisions Niveau 2 : " + _gestionJeu.GetTempsFinalNiv2() + "\n");
-
-                Debug.Log("Temps niveau 3 sans pointage : " + _gestionJeu.GetTempsNiv3());
-                Debug.Log("Nombre de collisions Niveau 3 : " + _gestionJeu.GetPointageNiv3());
-                Debug.Log("Temps avec collisions Niveau 3 : " + _gestionJeu.GetTempsFinalNiv3() + "\n");
-
-                Debug.Log("Votre temps final sans pénalité est de : " + Time.time);
-                Debug.Log("Vous avez touché au total : " + _gestionJeu.GetPointage() + " Obstacle(s)");
-                Debug.Log("Votre temps final est de : " + Temps_final());
+                _gestionJeu.SetTempsFinal(Time.time);
+                SceneManager.LoadScene(noScene + 1); // changement de scene
             }
             else
             {

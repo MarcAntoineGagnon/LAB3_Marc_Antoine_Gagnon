@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 29ccc064d700c154382f868206672e59
+guid: 9cffbc012f28a03469246f7f32be0527
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Skull Capz BRK
+  - Medieval Scroll of Wisdom
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0
